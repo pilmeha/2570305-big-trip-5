@@ -1,0 +1,89 @@
+import { capitalizeFirstLetter } from '../utils';
+
+export const createDestinationItemTemplate = (type) => `
+  <div class="event__type-item">
+    <input
+      id="event-type-${type}-1"
+      class="event__type-input
+      visually-hidden"
+      type="radio"
+      name="event-type"
+      value="${type}"
+    >
+    <label
+      class="event__type-label  event__type-label--${type}"
+      for="event-type-${type}-1"
+    >
+      ${capitalizeFirstLetter(type)}
+    </label>
+  </div>
+`;
+
+export const createOffersItemTemplate = (offers, isChecked) => `
+  <div class="event__offer-selector">
+    <input
+      class="event__offer-checkbox  visually-hidden"
+      id="event-offer-${offers.id}"
+      type="checkbox"
+      name="event-offer-${offers.id}"
+      ${isChecked ? 'checked' : ''}
+    >
+    <label
+      class="event__offer-label"
+      for="event-offer-${offers.id}"
+    >
+      <span class="event__offer-title">${offers.title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offers.price}</span>
+    </label>
+  </div>
+`;
+
+export const createPictureForDestinationTemplate = (picture) => `
+  <img
+    class="event__photo"
+    src="${picture.src}"
+    alt="${picture.description}"
+  >
+`;
+
+export const getOffersForPoint = (point, offers) => {
+  const offersByType = offers.find((item) => item.type === point.type);
+
+  if (!offersByType) {
+    return [];
+  }
+
+  return offersByType.offers;
+};
+
+export const createOffersTemplate = (point, offers) => {
+  const offersList = getOffersForPoint(point, offers);
+
+  return offersList
+    .map((offer) =>
+      createOffersItemTemplate(
+        offer,
+        point.offers.includes(offer.id)
+      )
+    )
+    .join('');
+};
+
+export createPicturesTemplate = (destination) => {
+  if (!destination || !destination.picture.length) {
+    return '';
+  }
+
+  return `
+    <div class="event__photos-container">
+      <div class="event__photos-tape">
+
+        ${destination.pictures
+          .map(createPictureForDestinationTemplate)
+          .join('')}
+      </div>
+    </div>
+  `;
+}
+

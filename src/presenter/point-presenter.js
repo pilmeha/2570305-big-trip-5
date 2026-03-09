@@ -4,21 +4,35 @@ import PointView from '../view/point-view.js';
 
 export default class PointPresenter {
   #container = null;
+  #point = null;
+  #destinations = null;
+  #offers = null;
+
   #pointComponent = null;
   #editComponent = null;
 
-  constructor(container) {
+  constructor({container, point, destination, offers}) {
     this.#container = container;
+    this.#point = point;
+    this.#destinations = destination;
+    this.#offers = offers;
   }
 
   init() {
+    const destination = this.#destinations.find(
+      (dest) => dest.id === this.#point.destination
+    );
+
     this.#pointComponent = new PointView({
       onEditClick: this.#handleEditClick
     });
 
     this.#editComponent = new FormEditPointView({
       onFormSubmit: this.#handleFormSubmit,
-      onRollupClick: this.#handleRollupClick
+      onRollupClick: this.#handleRollupClick,
+      point: this.#point,
+      destination: destination,
+      offers: this.#offers
     });
 
     render(this.#pointComponent, this.#container);

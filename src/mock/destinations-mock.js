@@ -1,5 +1,5 @@
 /* eslint-disable quotes */
-export const desctinationsMocks = [
+export const destinationsMocks = [
   {
     "id": "7655ac0a-99d2-4435-ae91-36690216dcb4",
     "description": "Monaco - full of of cozy canteens where you can try the best coffee in the Middle East",
