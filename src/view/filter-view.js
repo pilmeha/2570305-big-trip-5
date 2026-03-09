@@ -1,7 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { capitalizeFirstLetter } from '../utils.js';
-
-const FILTER_TYPES = ['everything', 'future', 'present', 'past'];
+import { FILTER_TYPES } from '../const.js';
 
 const createFilterItemTemplate = (type) => `
   <div class="trip-filters__filter">

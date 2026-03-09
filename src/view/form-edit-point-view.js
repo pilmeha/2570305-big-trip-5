@@ -166,9 +166,7 @@ export default class FormEditPointView extends AbstractView {
     this.#handleFormSubmit = onFormSubmit;
     this.#handleRollupClick = onRollupClick;
 
-    this.element
-      .querySelector('form')
-      .addEventListener('submit', this.#handleFormSubmit);
+    this.element.addEventListener('submit', this.#handleFormSubmit);
 
     this.element
       .querySelector('.event__rollup-btn')

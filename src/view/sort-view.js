@@ -1,7 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { capitalizeFirstLetter } from '../utils.js';
-
-const SORT_TYPES = ['day', 'event', 'time', 'price', 'offers'];
+import { SORT_TYPES } from '../const.js';
 
 const createSortItemTemplate = (type) => `
   <div class="trip-sort__item  trip-sort__item--${type}day">
