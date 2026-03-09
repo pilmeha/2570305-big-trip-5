@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createFormEditPointTemplate = () =>
   `
@@ -157,20 +157,26 @@ const createFormEditPointTemplate = () =>
   </form>
   `;
 
-export default class FormEditPointView {
-  getTemplate() {
+export default class FormEditPointView extends AbstractView {
+  #handleFormSubmit = null;
+  #handleRollupClick = null;
+
+  constructor({onFormSubmit, onRollupClick}) {
+    super();
+
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleRollupClick = onRollupClick;
+
+    this.element
+      .querySelector('form')
+      .addEventListener('submit', this.#handleFormSubmit);
+
+    this.element
+      .querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#handleRollupClick);
+  }
+
+  get template() {
     return createFormEditPointTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
