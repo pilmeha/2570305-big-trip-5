@@ -5,7 +5,10 @@ import { render } from '../framework/render.js';
 import EmptyList from '../view/empty-view.js';
 import PointPresenter from './point-presenter.js';
 
+import ContentView from '../view/content-view.js';
+
 export default class BoardPresenter {
+  #eventListComponent = new ContentView();
   #boardContainer = null;
   #filterContainer = null;
   #pointsModel = null;

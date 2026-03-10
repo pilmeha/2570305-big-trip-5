@@ -3,11 +3,8 @@ import PointModel from './model/point-model.js';
 import DestinationModel from './model/destination-model.js';
 import OffersModel from './model/offers-model.js';
 
-
 const tripElement = document.querySelector('.trip-events');
-const tripEventsList = tripElement.querySelector('.trip-events__list');
 const filtersElement = document.querySelector('.trip-controls__filters');
-
 
 const pointsModel = new PointModel();
 const destinationModel = new DestinationModel();
