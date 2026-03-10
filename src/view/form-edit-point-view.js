@@ -1,8 +1,13 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { DESTINATION_TYPES } from '../const.js';
-import { createDestinationItemTemplate, createOffersItemTemplate } from '../services/services.js';
+import {
+  createDestinationItemTemplate,
+  createDestinationListTemplate,
+  createDestinationSectionTemplate,
+  createOffersTemplate
+} from '../services/services.js';
 
-const createFormEditPointTemplate = (point, destination, offers) => `
+const createFormEditPointTemplate = (point, destination, offers, destinations) => `
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
@@ -26,9 +31,7 @@ const createFormEditPointTemplate = (point, destination, offers) => `
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination ? destination.name : ''}" list="destination-list-1">
         <datalist id="destination-list-1">
-          <option value="Amsterdam"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
+          ${createDestinationListTemplate(destinations)}
         </datalist>
       </div>
 
@@ -59,16 +62,10 @@ const createFormEditPointTemplate = (point, destination, offers) => `
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
-          ${point.offers.map(() => createOffersItemTemplate(offers)).join('')};
+          ${createOffersTemplate(point, offers)}
         </div>
       </section>
-
-      <section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">
-          ${destination ? destination.description : ''}
-        </p>
-      </section>
+        ${createDestinationSectionTemplate(destination)}
     </section>
   </form>
 `;
@@ -76,28 +73,42 @@ const createFormEditPointTemplate = (point, destination, offers) => `
 export default class FormEditPointView extends AbstractView {
   #handleFormSubmit = null;
   #handleRollupClick = null;
+
   #point = null;
   #destination = null;
   #offers = null;
+  #destinations = null;
 
-  constructor({onFormSubmit, onRollupClick, point, destination, offers}) {
+  constructor({onFormSubmit, onRollupClick, point, destination, offers, destinations}) {
     super();
 
     this.#handleFormSubmit = onFormSubmit;
     this.#handleRollupClick = onRollupClick;
+
     this.#point = point;
     this.#destination = destination;
     this.#offers = offers;
+    this.#destinations = destinations;
 
     this.element
-      .addEventListener('submit', this.#handleFormSubmit);
+      .addEventListener('submit', this.#forSubmitHandler);
 
     this.element
       .querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#handleRollupClick);
+      .addEventListener('click', this.#rollupClickHandler);
   }
 
   get template() {
-    return createFormEditPointTemplate(this.#point, this.#destination, this.#offers);
+    return createFormEditPointTemplate(this.#point, this.#destination, this.#offers, this.#destinations);
   }
+
+  #forSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
+
+  #rollupClickHandler = () => {
+    this.#handleRollupClick();
+  };
+
 }

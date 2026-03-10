@@ -11,10 +11,10 @@ export default class PointPresenter {
   #pointComponent = null;
   #editComponent = null;
 
-  constructor({container, point, destination, offers}) {
+  constructor({container, point, destinations, offers}) {
     this.#container = container;
     this.#point = point;
-    this.#destinations = destination;
+    this.#destinations = destinations;
     this.#offers = offers;
   }
 
@@ -24,6 +24,9 @@ export default class PointPresenter {
     );
 
     this.#pointComponent = new PointView({
+      point: this.#point,
+      destination,
+      offers: this.#offers,
       onEditClick: this.#handleEditClick
     });
 
@@ -32,7 +35,8 @@ export default class PointPresenter {
       onRollupClick: this.#handleRollupClick,
       point: this.#point,
       destination: destination,
-      offers: this.#offers
+      offers: this.#offers,
+      destinations: this.#destinations
     });
 
     render(this.#pointComponent, this.#container);

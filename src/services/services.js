@@ -70,20 +70,40 @@ export const createOffersTemplate = (point, offers) => {
     .join('');
 };
 
-export createPicturesTemplate = (destination) => {
-  if (!destination || !destination.picture.length) {
+export const createPicturesTemplate = (destination) => {
+  if (!destination || !destination.pictures || !destination.pictures.length) {
     return '';
   }
 
   return `
     <div class="event__photos-container">
       <div class="event__photos-tape">
-
-        ${destination.pictures
-          .map(createPictureForDestinationTemplate)
-          .join('')}
+        ${destination.pictures.map(createPictureForDestinationTemplate).join('')}
       </div>
     </div>
   `;
-}
+};
 
+export const createDestinationListTemplate = (destinations) =>
+  destinations
+    .map(
+      (destination) =>
+        `<option value="${destination.name}"></option>`
+    )
+    .join('');
+
+export const createDestinationSectionTemplate = (destination) => {
+  if (!destination) {
+    return '';
+  }
+
+  return `
+    <section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">
+        ${destination.description}
+      </p>
+      ${createPicturesTemplate(destination)}
+    </section>
+  `;
+};

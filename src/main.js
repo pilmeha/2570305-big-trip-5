@@ -4,8 +4,10 @@ import DestinationModel from './model/destination-model.js';
 import OffersModel from './model/offers-model.js';
 
 
-// const filtersElement = document.querySelector('.trip-controls__filters');
 const tripElement = document.querySelector('.trip-events');
+const tripEventsList = tripElement.querySelector('.trip-events__list');
+const filtersElement = document.querySelector('.trip-controls__filters');
+
 
 const pointsModel = new PointModel();
 const destinationModel = new DestinationModel();
@@ -13,7 +15,7 @@ const offersModel = new OffersModel();
 
 const boardPresenter = new BoardPresenter({
   boardContainer: tripElement,
-  // filterContainer: filtersElement,
+  filterContainer: filtersElement,
   pointsModel: pointsModel,
   destinationModel: destinationModel,
   offersModel: offersModel
