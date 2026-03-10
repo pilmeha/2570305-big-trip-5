@@ -54,7 +54,7 @@ const createFormAddPointTemplate = (point, destination, offers, destinations) =>
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
-          ${createOffersItemTemplate(offers, point.is_favorite)}
+          ${createOffersItemTemplate(offers)};
         </div>
       </section>
       ${createDestinationSectionTemplate(destination)}
@@ -78,6 +78,6 @@ export default class FormAddPointView extends AbstractView {
   }
 
   get template() {
-    return createFormAddPointTemplate(this.#point, this.#destination, this.#offers, this.#destinations);
+    return createFormAddPointTemplate(this.#point, this.#destination, this.#offers);
   }
 }
