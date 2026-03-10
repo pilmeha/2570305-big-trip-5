@@ -79,16 +79,16 @@ export default class FormEditPointView extends AbstractView {
   #offers = null;
   #destinations = null;
 
-  constructor({onFormSubmit, onRollupClick, point, destination, offers, destinations}) {
+  constructor({point, destination, offers, destinations, onFormSubmit, onRollupClick}) {
     super();
-
-    this.#handleFormSubmit = onFormSubmit;
-    this.#handleRollupClick = onRollupClick;
 
     this.#point = point;
     this.#destination = destination;
     this.#offers = offers;
     this.#destinations = destinations;
+
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleRollupClick = onRollupClick;
 
     this.element
       .addEventListener('submit', this.#forSubmitHandler);
@@ -104,7 +104,7 @@ export default class FormEditPointView extends AbstractView {
 
   #forSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#point);
   };
 
   #rollupClickHandler = () => {

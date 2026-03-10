@@ -35,7 +35,7 @@ export default class BoardPresenter {
     render(this.#eventListComponent, this.#boardContainer);
 
     if (!this.points.length) {
-      render(new EmptyList(), this.#eventListComponent.element);
+      render(new EmptyList(), this.#boardContainer);
       return;
     }
 
@@ -51,8 +51,8 @@ export default class BoardPresenter {
       onDataChange: this.#handlePointChange
     });
 
-    this.#pointPresenters.set(point.id, pointPresenter);
     pointPresenter.init(point);
+    this.#pointPresenters.set(point.id, pointPresenter);
   }
 
   #handleModeChange = () => {
