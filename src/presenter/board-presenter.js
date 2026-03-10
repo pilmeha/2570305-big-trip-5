@@ -5,15 +5,14 @@ import { render } from '../framework/render.js';
 import EmptyList from '../view/empty-view.js';
 import PointPresenter from './point-presenter.js';
 
-import ContentView from '../view/content-view.js';
-
 export default class BoardPresenter {
-  #eventListComponent = new ContentView();
   #boardContainer = null;
   #filterContainer = null;
   #pointsModel = null;
   #destinationModel = null;
   #offersModel = null;
+
+  #pointPresenters = new Map();
 
   constructor({boardContainer, filterContainer, pointsModel, destinationModel, offersModel}) {
     this.#boardContainer = boardContainer;
@@ -35,14 +34,24 @@ export default class BoardPresenter {
     }
 
     points.forEach((point) => {
-      const pointPresenter = new PointPresenter({
-        container: this.#boardContainer,
-        point,
-        destinations: this.#destinationModel.destinations,
-        offers: this.#offersModel.offers
-      });
-
-      pointPresenter.init();
+      this.#renderPoint(point);
     });
   }
+
+  #renderPoint(point) {
+    const pointPresenter = new PointPresenter({
+      container: this.#boardContainer,
+      onModeChange: this.#handleModeChange,
+      point,
+      destinations: this.#destinationModel.destinations,
+      offers: this.#offersModel.offers,
+    });
+
+    this.#pointPresenters.set(point.id, pointPresenter);
+    pointPresenter.init();
+  }
+
+  #handleModeChange = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
 }
