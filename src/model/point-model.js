@@ -6,4 +6,10 @@ export default class PointModel {
   get points() {
     return this.#points;
   }
+
+  updatePoint(updatedPoint) {
+    this.#points = this.#points.map((point) =>
+      point.id === updatedPoint.id ? updatedPoint : point
+    );
+  }
 }
