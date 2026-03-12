@@ -39,7 +39,7 @@ function createFormEditPointTemplate(state, destinations, offers) {
     <fieldset class="event__type-group">
 
     ${DESTINATION_TYPES.map((type) =>
-      createDestinationItemTemplate(type, state.type))
+    createDestinationItemTemplate(type, state.type))
     .join('')}
 
     </fieldset>
@@ -214,8 +214,8 @@ export default class FormEditPointView extends AbstractStatefulView {
       .addEventListener('change', this.#offersChangeHandler);
 
     this.element
-    .querySelector('.event__reset-btn')
-    .addEventListener('click', this.#deleteClickHandler);
+      .querySelector('.event__reset-btn')
+      .addEventListener('click', this.#deleteClickHandler);
 
     this.#setDatepicker();
 
