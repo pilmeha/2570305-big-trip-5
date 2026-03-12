@@ -1,6 +1,6 @@
 import { capitalizeFirstLetter } from '../utils';
 
-export const createDestinationItemTemplate = (type) => `
+export const createDestinationItemTemplate = (type, currentType) => `
   <div class="event__type-item">
     <input
       id="event-type-${type}-1"
@@ -9,6 +9,7 @@ export const createDestinationItemTemplate = (type) => `
       type="radio"
       name="event-type"
       value="${type}"
+      ${type === currentType ? 'checked' : ''}
     >
     <label
       class="event__type-label  event__type-label--${type}"
@@ -19,22 +20,23 @@ export const createDestinationItemTemplate = (type) => `
   </div>
 `;
 
-export const createOffersItemTemplate = (offers, isChecked) => `
+export const createOffersItemTemplate = (offer, isChecked) => `
   <div class="event__offer-selector">
     <input
       class="event__offer-checkbox  visually-hidden"
-      id="event-offer-${offers.id}"
+      id="event-offer-${offer.id}"
       type="checkbox"
-      name="event-offer-${offers.id}"
+      name="event-offer-${offer.id}"
+      value="${offer.id}"
       ${isChecked ? 'checked' : ''}
     >
     <label
       class="event__offer-label"
-      for="event-offer-${offers.id}"
+      for="event-offer-${offer.id}"
     >
-      <span class="event__offer-title">${offers.title}</span>
+      <span class="event__offer-title">${offer.title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offers.price}</span>
+      <span class="event__offer-price">${offer.price}</span>
     </label>
   </div>
 `;
@@ -47,8 +49,8 @@ export const createPictureForDestinationTemplate = (picture) => `
   >
 `;
 
-export const getOffersForPoint = (point, offers) => {
-  const offersByType = offers.find((item) => item.type === point.type);
+export const getOffersForPoint = (state, offers) => {
+  const offersByType = offers.find((item) => item.type === state.type);
 
   if (!offersByType) {
     return [];
@@ -57,14 +59,16 @@ export const getOffersForPoint = (point, offers) => {
   return offersByType.offers;
 };
 
-export const createOffersTemplate = (point, offers) => {
-  const offersList = getOffersForPoint(point, offers);
+export const createOffersTemplate = (point, offersList) => {
+  if (!offersList.length) {
+    return '';
+  }
 
   return offersList
     .map((offer) =>
       createOffersItemTemplate(
         offer,
-        point.offers.includes(offer.id)
+        point.offers.includes(offer.id),
       )
     )
     .join('');
