@@ -23,7 +23,7 @@ const createPointViewTemplate = (point, destination, offers) => {
   return `
     <li class="trip-events__item">
       <div class="event">
-        <time class="event__date">${point.date_from}</time>
+        <time class="event__date">${formatEventDate(point.date_from)}</time>
         <div class="event__type">
           <img
             class="event__type-icon"
@@ -36,10 +36,6 @@ const createPointViewTemplate = (point, destination, offers) => {
           ${point.type} ${destination?.name ?? ''}
         </h3>
         <div class="event__schedule">
-
-          <p class="event__date">
-            ${formatEventDate(point.date_from)}
-          </p>
 
           <p class="event__time">
             <time class="event__start-time">
