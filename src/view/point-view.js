@@ -13,7 +13,7 @@ const createOffersTemplate = (offers) =>
     .join('');
 
 const createPointViewTemplate = (point, destination, offers) => {
-  const offersByType = getOffersForPoint(point, offers);
+  const offersByType = getOffersForPoint(point, offers) ?? [];
 
   const selectedOffers = offersByType.filter((offer) =>
     point.offers.includes(offer.id)

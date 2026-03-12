@@ -1,6 +1,6 @@
 import { capitalizeFirstLetter } from '../utils';
 
-export const createDestinationItemTemplate = (type) => `
+export const createDestinationItemTemplate = (type, currentType) => `
   <div class="event__type-item">
     <input
       id="event-type-${type}-1"
@@ -9,6 +9,7 @@ export const createDestinationItemTemplate = (type) => `
       type="radio"
       name="event-type"
       value="${type}"
+      ${type === currentType ? 'checked' : ''}
     >
     <label
       class="event__type-label  event__type-label--${type}"
@@ -26,6 +27,7 @@ export const createOffersItemTemplate = (offer, isChecked) => `
       id="event-offer-${offer.id}"
       type="checkbox"
       name="event-offer-${offer.id}"
+      value="${offer.id}"
       ${isChecked ? 'checked' : ''}
     >
     <label
@@ -47,8 +49,8 @@ export const createPictureForDestinationTemplate = (picture) => `
   >
 `;
 
-export const getOffersForPoint = (point, offers) => {
-  const offersByType = offers.find((item) => item.type === point.type);
+export const getOffersForPoint = (state, offers) => {
+  const offersByType = offers.find((item) => item.type === state.type);
 
   if (!offersByType) {
     return [];
@@ -57,9 +59,7 @@ export const getOffersForPoint = (point, offers) => {
   return offersByType.offers;
 };
 
-export const createOffersTemplate = (point, offers) => {
-  const offersList = getOffersForPoint(point, offers);
-
+export const createOffersTemplate = (point, offersList) => {
   if (!offersList.length) {
     return '';
   }
