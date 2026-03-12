@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { capitalizeFirstLetter } from '../utils.js';
+import { capitalizeFirstLetter } from '../utils/utils.js';
 import { FILTER_TYPES } from '../const.js';
 
 const createFilterItemTemplate = (type) => `

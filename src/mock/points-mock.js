@@ -1,4 +1,4 @@
-import { getRandomArrayElement } from '../utils';
+import { getRandomArrayElement } from '../utils/utils';
 
 /* eslint-disable quotes */
 export const pointsMocks = [

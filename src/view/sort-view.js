@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { capitalizeFirstLetter } from '../utils.js';
+import { capitalizeFirstLetter } from '../utils/utils.js';
 import { SORT_TYPES } from '../const.js';
 
 const createSortItemTemplate = (type) => `

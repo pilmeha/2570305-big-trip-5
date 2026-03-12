@@ -225,6 +225,7 @@ export default class FormEditPointView extends AbstractStatefulView {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.date_from,
+        maxDate: this._state.date_to,
         onChange: this.#dateFromChangeHandler
       }
     );
@@ -235,6 +236,7 @@ export default class FormEditPointView extends AbstractStatefulView {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.date_to,
+        minDate: this._state.date_from,
         onChange: this.#dateToChangeHandler
       }
     );

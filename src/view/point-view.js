@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { getOffersForPoint } from '../services/services.js';
+import { formatEventTime, formatDuration, formatEventDate } from '../utils/point-time.js';
 
 const createOffersTemplate = (offers) =>
   offers
@@ -35,16 +36,25 @@ const createPointViewTemplate = (point, destination, offers) => {
           ${point.type} ${destination?.name ?? ''}
         </h3>
         <div class="event__schedule">
+
+          <p class="event__date">
+            ${formatEventDate(point.date_from)}
+          </p>
+
           <p class="event__time">
             <time class="event__start-time">
-              ${point.date_from}
+              ${formatEventTime(point.date_from, point.date_to).split(' — ')[0]}
             </time>
             &mdash;
             <time class="event__end-time">
-              ${point.date_to}
+              ${formatEventTime(point.date_from, point.date_to).split(' — ')[1]}
             </time>
           </p>
-          <p class="event__duration">30M</p>
+
+          <p class="event__duration">
+            ${formatDuration(point.date_from, point.date_to)}
+          </p>
+
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">
