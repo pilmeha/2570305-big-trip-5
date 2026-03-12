@@ -317,7 +317,7 @@ export default class FormEditPointView extends AbstractStatefulView {
     });
 
     if (this.#datepickerTo) {
-      this.#datepickerTo.set('mindate', date);
+      this.#datepickerTo.set('minDate', date);
     }
   };
 
@@ -327,7 +327,7 @@ export default class FormEditPointView extends AbstractStatefulView {
     });
 
     if (this.#datepickerFrom) {
-      this.#datepickerFrom.set('maxdate', date);
+      this.#datepickerFrom.set('maxDate', date);
     }
   };
 
