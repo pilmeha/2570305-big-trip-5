@@ -20,112 +20,108 @@ function createFormEditPointTemplate(state, destinations, offers) {
 
   return `
     <form class="event event--edit" action="#" method="post">
-    <header class="event__header">
+      <header class="event__header">
 
-    <div class="event__type-wrapper">
+        <div class="event__type-wrapper">
 
-    <label class="event__type event__type-btn" for="event-type-toggle-1">
-    <span class="visually-hidden">Choose event type</span>
-    <img class="event__type-icon" width="17" height="17"
-    src="img/icons/${state.type}.png">
-    </label>
+          <label class="event__type event__type-btn" for="event-type-toggle-1">
+            <span class="visually-hidden">Choose event type</span>
+            <img class="event__type-icon" width="17" height="17"
+              src="img/icons/${state.type}.png">
+          </label>
 
-    <input class="event__type-toggle visually-hidden"
-    id="event-type-toggle-1"
-    type="checkbox">
+          <input class="event__type-toggle visually-hidden"
+            id="event-type-toggle-1"
+            type="checkbox">
 
-    <div class="event__type-list">
+          <div class="event__type-list">
 
-    <fieldset class="event__type-group">
+            <fieldset class="event__type-group">
 
-    ${DESTINATION_TYPES.map((type) =>
-    createDestinationItemTemplate(type, state.type))
-    .join('')}
+              ${DESTINATION_TYPES.map((type) => createDestinationItemTemplate(type, state.type)).join('')}
 
-    </fieldset>
+            </fieldset>
 
-    </div>
+          </div>
 
-    </div>
+        </div>
 
-    <div class="event__field-group event__field-group--destination">
+        <div class="event__field-group event__field-group--destination">
 
-    <label class="event__label event__type-output">
-    ${state.type}
-    </label>
+          <label class="event__label event__type-output">
+            ${state.type}
+          </label>
 
-    <input
-    class="event__input event__input--destination"
-    type="text"
-    value="${destination ? destination.name : ''}"
-    list="destination-list-1">
+          <input
+            class="event__input event__input--destination"
+            type="text"
+            value="${destination ? destination.name : ''}"
+            list="destination-list-1">
 
-    <datalist id="destination-list-1">
-    ${createDestinationListTemplate(destinations)}
-    </datalist>
+          <datalist id="destination-list-1">
+            ${createDestinationListTemplate(destinations)}
+          </datalist>
 
-    </div>
+        </div>
 
-    <div class="event__field-group event__field-group--time">
+        <div class="event__field-group event__field-group--time">
 
-    <input
-    class="event__input event__input--time"
-    id="event-start-time-1"
-    type="text"
-    value="${dayjs(state.date_from).format('DD/MM/YY HH:mm')}">
+          <input
+            class="event__input event__input--time"
+            id="event-start-time-1"
+            type="text"
+            value="${dayjs(state.date_from).format('DD/MM/YY HH:mm')}">
+          —
+          <input
+            class="event__input event__input--time"
+            id="event-end-time-1"
+            type="text"
+            value="${dayjs(state.date_to).format('DD/MM/YY HH:mm')}">
 
-    —
+        </div>
 
-    <input
-    class="event__input event__input--time"
-    id="event-end-time-1"
-    type="text"
-    value="${dayjs(state.date_to).format('DD/MM/YY HH:mm')}">
+        <div class="event__field-group event__field-group--price">
 
-    </div>
+          <label class="event__label">
+            €
+          </label>
 
-    <div class="event__field-group event__field-group--price">
+          <input
+            class="event__input event__input--price"
+            type="number"
+            value="${state.base_price}">
 
-    <label class="event__label">
-    €
-    </label>
+        </div>
 
-    <input
-    class="event__input event__input--price"
-    type="number"
-    value="${state.base_price}">
+        <button class="event__save-btn btn btn--blue" type="submit">
+          Save
+        </button>
 
-    </div>
+        <button class="event__reset-btn" type="reset">
+          Delete
+        </button>
 
-    <button class="event__save-btn btn btn--blue" type="submit">
-    Save
-    </button>
+        <button class="event__rollup-btn" type="button"></button>
 
-    <button class="event__reset-btn" type="reset">
-    Delete
-    </button>
+      </header>
 
-    <button class="event__rollup-btn" type="button"></button>
+      <section class="event__details">
 
-    </header>
+        <section class="event__section event__section--offers">
 
-    <section class="event__details">
+          <h3 class="event__section-title">
+            Offers
+          </h3>
 
-    <section class="event__section event__section--offers">
+          <div class="event__available-offers">
+            ${createOffersTemplate(state, offersByType)}
+          </div>
 
-    <h3 class="event__section-title">
-    Offers
-    </h3>
+        </section>
 
-    <div class="event__available-offers">
-    ${createOffersTemplate(state, offersByType)}
-    </div>
+      ${createDestinationSectionTemplate(destination)}
 
-    </section>
-
-    ${createDestinationSectionTemplate(destination)}
-
-    </section>
+      </section>
 
     </form>
   `;
