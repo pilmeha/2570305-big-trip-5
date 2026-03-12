@@ -315,12 +315,20 @@ export default class FormEditPointView extends AbstractStatefulView {
     this._setState({
       date_from: date
     });
+
+    if (this.#datepickerTo) {
+      this.#datepickerTo.set('mindate', date);
+    }
   };
 
   #dateToChangeHandler = ([date]) => {
     this._setState({
       date_to: date
     });
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.set('maxdate', date);
+    }
   };
 
   static parsePointToState(point) {
