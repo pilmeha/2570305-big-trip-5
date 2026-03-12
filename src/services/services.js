@@ -19,22 +19,22 @@ export const createDestinationItemTemplate = (type) => `
   </div>
 `;
 
-export const createOffersItemTemplate = (offers, isChecked) => `
+export const createOffersItemTemplate = (offer, isChecked) => `
   <div class="event__offer-selector">
     <input
       class="event__offer-checkbox  visually-hidden"
-      id="event-offer-${offers.id}"
+      id="event-offer-${offer.id}"
       type="checkbox"
-      name="event-offer-${offers.id}"
+      name="event-offer-${offer.id}"
       ${isChecked ? 'checked' : ''}
     >
     <label
       class="event__offer-label"
-      for="event-offer-${offers.id}"
+      for="event-offer-${offer.id}"
     >
-      <span class="event__offer-title">${offers.title}</span>
+      <span class="event__offer-title">${offer.title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offers.price}</span>
+      <span class="event__offer-price">${offer.price}</span>
     </label>
   </div>
 `;
@@ -60,11 +60,15 @@ export const getOffersForPoint = (point, offers) => {
 export const createOffersTemplate = (point, offers) => {
   const offersList = getOffersForPoint(point, offers);
 
+  if (!offersList.length) {
+    return '';
+  }
+
   return offersList
     .map((offer) =>
       createOffersItemTemplate(
         offer,
-        point.offers.includes(offer.id)
+        point.offers.includes(offer.id),
       )
     )
     .join('');

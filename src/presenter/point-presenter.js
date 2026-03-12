@@ -27,7 +27,6 @@ export default class PointPresenter {
 
   constructor({container, destinations, offers, onModeChange, onDataChange}) {
     this.#container = container;
-    // this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
     this.#handleModeChange = onModeChange;
@@ -55,7 +54,7 @@ export default class PointPresenter {
 
     this.#editComponent = new FormEditPointView({
       point: this.#point,
-      destination: this.#destination,
+      // destination: this.#destination,
       offers: this.#offers,
       destinations: this.#destinations,
 
@@ -85,6 +84,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== MODE.DEFAULT) {
+      this.#editComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   }
@@ -118,6 +118,7 @@ export default class PointPresenter {
   #escHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#editComponent.reset(this.#point);
       this.#replaceFormToPoint();
     }
   };
