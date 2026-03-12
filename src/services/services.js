@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter } from '../utils';
+import { capitalizeFirstLetter } from '../utils/utils';
 
 export const createDestinationItemTemplate = (type, currentType) => `
   <div class="event__type-item">
