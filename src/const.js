@@ -1,13 +1,9 @@
-export const FILTER_TYPES_OBJ = {
+export const FILTER_TYPES = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past'
 };
-
-export const FILTER_TYPES = [
-  'everything', 'future', 'present', 'past'
-];
 
 export const USER_ACTION = {
   UPDATE_POINT: 'UPDATE_POINT',

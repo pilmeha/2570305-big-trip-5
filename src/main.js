@@ -16,7 +16,6 @@ const filterModel = new FilterModel();
 
 const boardPresenter = new BoardPresenter({
   boardContainer: tripElement,
-  filterContainer: filtersElement,
   pointsModel: pointsModel,
   destinationModel: destinationModel,
   offersModel: offersModel,

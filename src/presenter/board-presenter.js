@@ -8,7 +8,7 @@ import PointPresenter from './point-presenter.js';
 import ContentView from '../view/content-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 
-import {POINT_COUNT} from '../const.js';
+import {FILTER_TYPES, POINT_COUNT, USER_ACTION} from '../const.js';
 
 import {
   filterPointFuture,
@@ -19,7 +19,6 @@ import {
 export default class BoardPresenter {
 
   #boardContainer = null;
-  #filterContainer = null;
 
   #pointsModel = null;
   #destinationModel = null;
@@ -40,14 +39,12 @@ export default class BoardPresenter {
 
   constructor({
     boardContainer,
-    filterContainer,
     pointsModel,
     destinationModel,
     offersModel,
     filterModel
   }) {
     this.#boardContainer = boardContainer;
-    this.#filterContainer = filterContainer;
 
     this.#pointsModel = pointsModel;
     this.#destinationModel = destinationModel;
@@ -67,13 +64,13 @@ export default class BoardPresenter {
     const filter = this.#filterModel.filter;
 
     switch (filter) {
-      case 'future':
+      case FILTER_TYPES.FUTURE:
         return points.filter(filterPointFuture);
 
-      case 'present':
+      case FILTER_TYPES.PRESENT:
         return points.filter(filterPointPresent);
 
-      case 'past':
+      case FILTER_TYPES.PAST:
         return points.filter(filterPointPast);
     }
 
@@ -198,15 +195,15 @@ export default class BoardPresenter {
 
   #handlePointChange = (actionType, update) => {
     switch (actionType) {
-      case 'UPDATE_POINT':
+      case USER_ACTION.UPDATE_POINT:
         this.#pointsModel.updatePoint(update);
         break;
 
-      case 'DELETE_POINT':
+      case USER_ACTION.DELETE_POINT:
         this.#pointsModel.deletePoint(update);
         break;
 
-      case 'ADD_POINT':
+      case USER_ACTION.ADD_POINT:
         this.#pointsModel.addPoint(update);
         break;
     }

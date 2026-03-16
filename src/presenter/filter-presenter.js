@@ -39,7 +39,6 @@ export default class FilterPresenter {
   };
 
   #handleFilterChange = (filterType) => {
-    console.log(filterType);
     this.#filterModel.setFilter(filterType);
   };
 }
