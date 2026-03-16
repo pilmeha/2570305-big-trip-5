@@ -11,6 +11,11 @@ export const USER_ACTION = {
   DELETE_POINT: 'DELETE_POINT'
 };
 
+export const POINT_MODE = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
 export const SORT_TYPES = ['day', 'event', 'time', 'price', 'offers'];
 
 export const POINT_COUNT = 5;
