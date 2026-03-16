@@ -121,7 +121,7 @@ export default class BoardPresenter {
       this.#handleShowMoreClick
     );
 
-    render(this.#showMoreButtonComponent, this.#eventListComponent.element);
+    render(this.#showMoreButtonComponent, this.#boardContainer);
   }
 
   #renderPoint(point) {
@@ -163,7 +163,19 @@ export default class BoardPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (updatedPoint) => {
-    this.#pointsModel.updatePoint(updatedPoint);
+  #handlePointChange = (actionType, updated) => {
+    switch (actionType) {
+      case 'UPDATE_POINT':
+        this.#pointsModel.updatePoint(updated);
+        break;
+
+      case 'DELETE_POINT':
+        this.#pointsModel.deletePoint(updated);
+        break;
+
+      case 'ADD_POINT':
+        this.#pointsModel.addPoint(updated);
+        break;
+    }
   };
 }
