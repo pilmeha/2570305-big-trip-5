@@ -7,12 +7,12 @@ export default class PointModel extends Observable {
     return this.#points;
   }
 
-  setPoints(points) {
-    this.#points = [...points];
-    this._notify();
-  }
+  // setPoints(points) {
+  //   this.#points = [...points];
+  //   this._notify();
+  // }
 
-  updatePoint(updatedPoint) {
+  updatePoint(updateType, updatedPoint) {
     const index = this.#points.findIndex(
       (point) => point.id === updatedPoint.id
     );
@@ -27,20 +27,20 @@ export default class PointModel extends Observable {
       ...this.points.slice(index + 1)
     ];
 
-    this._notify();
+    this._notify(updateType, updatedPoint);
   }
 
-  addPoint(newPoint) {
+  addPoint(updateType, newPoint) {
     this.#points = [newPoint, ...this.#points];
 
-    this._notify();
+    this._notify(updateType, newPoint);
   }
 
-  deletePoint(pointToDelete) {
+  deletePoint(updateType, pointToDelete) {
     this.#points = this.#points.filter(
       (point) => point.id !== pointToDelete.id
     );
 
-    this._notify();
+    this._notify(updateType);
   }
 }

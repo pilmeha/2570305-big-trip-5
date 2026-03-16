@@ -31,3 +31,9 @@ export const DESTINATION_TYPES = [
   'sightseeing',
   'restaurant'
 ];
+
+export const UPDATE_TYPE = {
+  PATCH: 'patch',
+  MINOR: 'minor',
+  MAJOR: 'major'
+};
