@@ -5,7 +5,7 @@ import {render, replace, remove} from '../framework/render.js';
 import FormEditPointView from '../view/form-edit-point-view.js';
 import PointView from '../view/point-view.js';
 
-import {POINT_MODE} from '../const.js';
+import {POINT_MODE, USER_ACTION, UPDATE_TYPE} from '../const.js';
 
 
 export default class PointPresenter {
@@ -115,7 +115,11 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (updatedPoint) => {
-    this.#handleDataChange('UPDATE_POINT', updatedPoint);
+    this.#handleDataChange(
+      USER_ACTION.UPDATE_POINT,
+      UPDATE_TYPE.PATCH,
+      updatedPoint
+    );
     this.#replaceFormToPoint();
   };
 
@@ -124,7 +128,11 @@ export default class PointPresenter {
   };
 
   #handleDeleteClick = (point) => {
-    this.#handleDataChange('DELETE_POINT', point);
+    this.#handleDataChange(
+      USER_ACTION.DELETE_POINT,
+      UPDATE_TYPE.MINOR,
+      point
+    );
   };
 
   #handleFavoriteClick = () => {

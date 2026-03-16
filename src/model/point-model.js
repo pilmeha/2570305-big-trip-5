@@ -13,6 +13,10 @@ export default class PointModel extends Observable {
   // }
 
   updatePoint(updateType, updatedPoint) {
+    if (!updatedPoint || !updatedPoint.id) {
+      return;
+    }
+
     const index = this.#points.findIndex(
       (point) => point.id === updatedPoint.id
     );
@@ -37,6 +41,10 @@ export default class PointModel extends Observable {
   }
 
   deletePoint(updateType, pointToDelete) {
+    if (!pointToDelete || !pointToDelete.id) {
+      return;
+    }
+
     this.#points = this.#points.filter(
       (point) => point.id !== pointToDelete.id
     );
