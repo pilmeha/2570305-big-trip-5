@@ -1,4 +1,5 @@
 import BoardPresenter from './presenter/board-presenter.js';
+import FilterPresenter from './presenter/filter-presenter.js';
 
 import PointModel from './model/point-model.js';
 import DestinationModel from './model/destination-model.js';
@@ -22,4 +23,11 @@ const boardPresenter = new BoardPresenter({
   filterModel: filterModel
 });
 
+const filterPresenter = new FilterPresenter({
+  container: filtersElement,
+  pointsModel,
+  filterModel
+});
+
+filterPresenter.init();
 boardPresenter.init();

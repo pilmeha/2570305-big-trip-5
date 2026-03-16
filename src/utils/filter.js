@@ -5,8 +5,8 @@ export const filterPointFuture = (point) =>
 
 export const filterPointPresent = (point) =>
   dayjs(point.date_from).isBefore(dayjs()) &&
-  dayjs(point.date_from).isAfter(dayjs());
+  dayjs(point.date_to).isAfter(dayjs());
 
 export const filterPointPast = (point) =>
-  dayjs(point.date_from).isBefore(dayjs());
+  dayjs(point.date_to).isBefore(dayjs());
 

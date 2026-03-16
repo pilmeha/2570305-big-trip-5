@@ -1,5 +1,5 @@
+/* eslint-disable camelcase */
 import SortView from '../view/sort-view.js';
-import FilterView from '../view/filter-view.js';
 
 import {render, remove} from '../framework/render.js';
 
@@ -8,7 +8,7 @@ import PointPresenter from './point-presenter.js';
 import ContentView from '../view/content-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 
-import {FILTER_TYPES, POINT_COUNT} from '../const.js';
+import {POINT_COUNT} from '../const.js';
 
 import {
   filterPointFuture,
@@ -34,6 +34,9 @@ export default class BoardPresenter {
 
   #showMoreButtonComponent = null;
 
+  #newPointButton = document.querySelector('.trip-main__event-add-btn');
+
+  #emptyListComponent = null;
 
   constructor({
     boardContainer,
@@ -53,20 +56,24 @@ export default class BoardPresenter {
 
     this.#filterModel.addObserver(this.#handleModelEvent);
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#newPointButton.addEventListener(
+      'click',
+      this.#handleNewPointClick
+    );
   }
 
   get points() {
     const points = this.#pointsModel.points;
-    const filterType = this.#filterModel.filter;
+    const filter = this.#filterModel.filter;
 
-    switch (filterType) {
-      case FILTER_TYPES[1]:
+    switch (filter) {
+      case 'future':
         return points.filter(filterPointFuture);
 
-      case FILTER_TYPES[2]:
+      case 'present':
         return points.filter(filterPointPresent);
 
-      case FILTER_TYPES[3]:
+      case 'past':
         return points.filter(filterPointPast);
     }
 
@@ -74,15 +81,8 @@ export default class BoardPresenter {
   }
 
   init() {
-
-    render(new FilterView(), this.#filterContainer);
     render(new SortView(), this.#boardContainer);
     render(this.#eventListComponent, this.#boardContainer);
-
-    if (!this.points.length) {
-      render(new EmptyList(), this.#boardContainer);
-      return;
-    }
 
     this.#renderBoard();
   }
@@ -93,25 +93,43 @@ export default class BoardPresenter {
   };
 
   #renderBoard() {
-    const points = this.points.slice(0, this.#renderedPointCount);
 
-    points.forEach((point) => this.#renderPoint(point));
+    const points = this.points;
 
-    if (this.points.length > this.#renderedPointCount) {
+    if (!points.length) {
+
+      this.#emptyListComponent = new EmptyList();
+
+      render(this.#emptyListComponent, this.#boardContainer);
+
+      return;
+    }
+
+    const pointsToRender = points.slice(0, this.#renderedPointCount);
+
+    pointsToRender.forEach((point) => this.#renderPoint(point));
+
+    if (points.length > this.#renderedPointCount) {
       this.#renderShowMoreButton();
     }
+
   }
 
   #clearBoard() {
-    this.#pointPresenters.forEach((presenter) => presenter.destroy());
 
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
 
-    this.#renderedPointCount = POINT_COUNT;
+    if (this.#emptyListComponent) {
+      remove(this.#emptyListComponent);
+      this.#emptyListComponent = null;
+    }
 
     if (this.#showMoreButtonComponent) {
       remove(this.#showMoreButtonComponent);
     }
+
+    this.#renderedPointCount = POINT_COUNT;
   }
 
   #renderShowMoreButton() {
@@ -159,22 +177,37 @@ export default class BoardPresenter {
     }
   };
 
+  #handleNewPointClick = () => {
+    const newPoint = {
+      id: Date.now().toString(),
+      type: 'taxi',
+      destination: null,
+      date_from: new Date(),
+      date_to: new Date(),
+      base_price: 0,
+      offers: [],
+      is_favorite: false
+    };
+
+    this.#pointsModel.addPoint(newPoint);
+  };
+
   #handleModeChange = () => {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (actionType, updated) => {
+  #handlePointChange = (actionType, update) => {
     switch (actionType) {
       case 'UPDATE_POINT':
-        this.#pointsModel.updatePoint(updated);
+        this.#pointsModel.updatePoint(update);
         break;
 
       case 'DELETE_POINT':
-        this.#pointsModel.deletePoint(updated);
+        this.#pointsModel.deletePoint(update);
         break;
 
       case 'ADD_POINT':
-        this.#pointsModel.addPoint(updated);
+        this.#pointsModel.addPoint(update);
         break;
     }
   };
