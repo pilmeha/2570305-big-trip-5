@@ -65,7 +65,8 @@ export default class PointPresenter {
       offers: this.#offers,
       destinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
-      onRollupClick: this.#handleRollupClick
+      onRollupClick: this.#handleRollupClick,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     if (!prevPointComponent || !prevEditComponent) {
@@ -76,13 +77,9 @@ export default class PointPresenter {
     }
 
     if (this.#mode === MODE.DEFAULT) {
-
       replace(this.#pointComponent, prevPointComponent);
-
     } else {
-
       replace(this.#editComponent, prevEditComponent);
-
     }
 
     remove(prevPointComponent);
@@ -91,87 +88,63 @@ export default class PointPresenter {
   }
 
   destroy() {
-
     remove(this.#pointComponent);
     remove(this.#editComponent);
-
   }
 
   resetView() {
-
     if (this.#mode !== MODE.DEFAULT) {
-
       this.#editComponent.reset(this.#point);
-
       this.#replaceFormToPoint();
-
     }
-
   }
 
   #replacePointToForm() {
-
     this.#handleModeChange();
-
     this.#mode = MODE.EDITING;
-
     replace(this.#editComponent, this.#pointComponent);
-
     document.addEventListener('keydown', this.#escHandler);
-
   }
 
   #replaceFormToPoint = () => {
-
     this.#mode = MODE.DEFAULT;
-
     replace(this.#pointComponent, this.#editComponent);
-
     document.removeEventListener('keydown', this.#escHandler);
-
   };
 
   #handleEditClick = () => {
-
     this.#replacePointToForm();
-
   };
 
   #handleFormSubmit = (updatedPoint) => {
-
-    this.#handleDataChange(updatedPoint);
-
+    this.#handleDataChange('UPDATE_POINT', updatedPoint);
     this.#replaceFormToPoint();
-
   };
 
   #handleRollupClick = () => {
-
     this.#replaceFormToPoint();
+  };
 
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange('DELETE_POINT', point);
   };
 
   #handleFavoriteClick = () => {
-
-    this.#handleDataChange({
-      ...this.#point,
-      is_favorite: !this.#point.is_favorite
-    });
-
+    this.#handleDataChange(
+      'UPDATE_POINT',
+      {
+        ...this.#point,
+        is_favorite: !this.#point.is_favorite
+      }
+    );
   };
 
   #escHandler = (evt) => {
-
     if (evt.key === 'Escape') {
-
       evt.preventDefault();
-
       this.#editComponent.reset(this.#point);
-
       this.#replaceFormToPoint();
-
     }
-
   };
 
 }
