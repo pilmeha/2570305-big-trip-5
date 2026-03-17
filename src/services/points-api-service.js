@@ -1,5 +1,5 @@
 import ApiService from '../framework/api-service.js';
-import { Method } from '../const.js';
+import { METHOD_TYPE } from '../const.js';
 import PointAdapter from './point-adapter.js';
 
 export default class PointsApiService extends ApiService {
@@ -24,7 +24,7 @@ export default class PointsApiService extends ApiService {
   async updatePoint(point) {
     const response = await this._load({
       url: `points/${point.id}`,
-      method: Method.PUT,
+      method: METHOD_TYPE.PUT,
       body: JSON.stringify(PointAdapter.adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
@@ -37,14 +37,14 @@ export default class PointsApiService extends ApiService {
   async deletePoint(point) {
     await this._load({
       url: `points/${point.id}`,
-      method: Method.DELETE,
+      method: METHOD_TYPE.DELETE,
     });
   }
 
   async addPoint(point) {
     const response = await this._load({
       url: 'points',
-      method: Method.POST,
+      method: METHOD_TYPE.POST,
       body: JSON.stringify(PointAdapter.adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     });

@@ -32,13 +32,18 @@ export const DESTINATION_TYPES = [
   'restaurant'
 ];
 
+export const TIME_LIMIT = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export const UPDATE_TYPE = {
   PATCH: 'patch',
   MINOR: 'minor',
   MAJOR: 'major'
 };
 
-export const Method = {
+export const METHOD_TYPE = {
   GET: 'GET',
   PUT: 'PUT',
   DELETE: 'DELETE',

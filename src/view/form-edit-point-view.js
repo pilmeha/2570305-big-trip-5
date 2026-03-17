@@ -19,13 +19,16 @@ function createFormEditPointTemplate(state, destinations, offers) {
   const offersByType = getOffersForPoint(state, offers);
 
   return `
-    <form class="event event--edit" action="#" method="post">
+    <form
+      class="event event--edit ${state.isDisabled ? 'event--disabled' : ''}"
+      action="#"
+      method="post"
+    >
       <header class="event__header">
 
         <div class="event__type-wrapper">
 
           <label class="event__type event__type-btn" for="event-type-toggle-1">
-            <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17"
               src="img/icons/${state.type}.png">
           </label>
@@ -36,7 +39,10 @@ function createFormEditPointTemplate(state, destinations, offers) {
 
           <div class="event__type-list">
 
-            <fieldset class="event__type-group">
+            <fieldset
+              class="event__type-group"
+              ${state.isDisabled ? 'disabled' : ''}
+            >
 
               ${DESTINATION_TYPES.map((type) => createDestinationItemTemplate(type, state.type)).join('')}
 
@@ -93,12 +99,20 @@ function createFormEditPointTemplate(state, destinations, offers) {
 
         </div>
 
-        <button class="event__save-btn btn btn--blue" type="submit">
-          Save
+        <button
+          class="event__save-btn btn btn--blue"
+          type="submit"
+          ${state.isDisabled ? 'disabled' : ''}
+        >
+          ${state.isSaving ? 'Saving...' : 'Save'}
         </button>
 
-        <button class="event__reset-btn" type="reset">
-          Delete
+        <button
+          class="event__reset-btn"
+          type="reset"
+          ${state.isDisabled ? 'disabled' : ''}
+        >
+          ${state.isDeleting ? 'Deleting...' : 'Delete'}
         </button>
 
         <button class="event__rollup-btn" type="button"></button>
@@ -185,9 +199,7 @@ export default class FormEditPointView extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
-
-    this.element
-      .addEventListener('submit', this.#formSubmitHandler);
+    this.element.addEventListener('submit', this.#formSubmitHandler);
 
     this.element
       .querySelector('.event__rollup-btn')
@@ -304,8 +316,7 @@ export default class FormEditPointView extends AbstractStatefulView {
 
   };
 
-  #deleteClickHandler = (evt) => {
-    evt.preventDefault();
+  #deleteClickHandler = () => {
     this.#handleDeleteClick(
       FormEditPointView.parseStateToPoint(this._state)
     );
@@ -330,6 +341,30 @@ export default class FormEditPointView extends AbstractStatefulView {
       this.#datepickerFrom.set('maxDate', date);
     }
   };
+
+  setSaving() {
+    this.updateElement({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setDeleting() {
+    this.updateElement({
+      isDisabled: true,
+      isDeleting: true
+    });
+  }
+
+  setAborting() {
+    this.shake(() => {
+      this.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    });
+  }
 
   static parsePointToState(point) {
     return {
