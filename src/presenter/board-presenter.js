@@ -8,13 +8,15 @@ import PointPresenter from './point-presenter.js';
 import ContentView from '../view/content-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 
-import {FILTER_TYPES, POINT_COUNT, USER_ACTION} from '../const.js';
+import {FILTER_TYPES, POINT_COUNT, UPDATE_TYPE, USER_ACTION} from '../const.js';
 
 import {
   filterPointFuture,
   filterPointPresent,
   filterPointPast
 } from '../utils/filter.js';
+
+import NewPointPresenter from './new-point-presenter.js';
 
 export default class BoardPresenter {
 
@@ -37,6 +39,8 @@ export default class BoardPresenter {
 
   #emptyListComponent = null;
 
+  #newPointPresenter = null;
+
   constructor({
     boardContainer,
     pointsModel,
@@ -53,10 +57,19 @@ export default class BoardPresenter {
 
     this.#filterModel.addObserver(this.#handleModelEvent);
     this.#pointsModel.addObserver(this.#handleModelEvent);
+
     this.#newPointButton.addEventListener(
       'click',
       this.#handleNewPointClick
     );
+
+    this.#newPointPresenter = new NewPointPresenter({
+      container: this.#eventListComponent.element,
+      destinations: this.#destinationModel.destinations,
+      offers: this.#offersModel.offers,
+      onDataChange: this.#handlePointChange,
+      onDestroy: this.#handleNewPointDestroy
+    });
   }
 
   get points() {
@@ -84,9 +97,22 @@ export default class BoardPresenter {
     this.#renderBoard();
   }
 
-  #handleModelEvent = () => {
-    this.#clearBoard();
-    this.#renderBoard();
+  #handleModelEvent = (updateType, data) => {
+    switch(updateType) {
+      case UPDATE_TYPE.PATCH:
+        this.#pointPresenters.get(data.id)?.init(data);
+        break;
+
+      case UPDATE_TYPE.MINOR:
+        this.#clearBoard();
+        this.#renderBoard();
+        break;
+
+      case UPDATE_TYPE.MAJOR:
+        this.#clearBoard({resetRenderedPointCount: true});
+        this.#renderBoard();
+        break;
+    }
   };
 
   #renderBoard() {
@@ -112,7 +138,7 @@ export default class BoardPresenter {
 
   }
 
-  #clearBoard() {
+  #clearBoard({resetRenderedPointCount = false} = {}) {
 
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
@@ -126,7 +152,9 @@ export default class BoardPresenter {
       remove(this.#showMoreButtonComponent);
     }
 
-    this.#renderedPointCount = POINT_COUNT;
+    if (resetRenderedPointCount) {
+      this.#renderedPointCount = POINT_COUNT;
+    }
   }
 
   #renderShowMoreButton() {
@@ -175,37 +203,49 @@ export default class BoardPresenter {
   };
 
   #handleNewPointClick = () => {
+    this.#handleModeChange();
+
+    const firsteDestination = this.#destinationModel.destinations[0];
+
     const newPoint = {
-      id: Date.now().toString(),
       type: 'taxi',
-      destination: null,
-      date_from: new Date(),
-      date_to: new Date(),
-      base_price: 0,
+      destination: firsteDestination.id,
+      dateFrom: new Date(),
+      dateTo: new Date(Date.now() + 60 * 60 * 1000),
+      basePrice: 100,
       offers: [],
-      is_favorite: false
+      isFavorite: false
     };
 
-    this.#pointsModel.addPoint(newPoint);
+    this.#newPointButton.disabled = true;
+    this.#newPointPresenter.init(newPoint);
+  };
+
+  #handleNewPointDestroy = () => {
+    this.#newPointButton.disabled = false;
   };
 
   #handleModeChange = () => {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (actionType, update) => {
-    switch (actionType) {
-      case USER_ACTION.UPDATE_POINT:
-        this.#pointsModel.updatePoint(update);
-        break;
+  #handlePointChange = async (actionType, updateType, update) => {
+    try {
+      switch (actionType) {
+        case USER_ACTION.UPDATE_POINT:
+          await this.#pointsModel.updatePoint(updateType, update);
+          break;
 
-      case USER_ACTION.DELETE_POINT:
-        this.#pointsModel.deletePoint(update);
-        break;
+        case USER_ACTION.DELETE_POINT:
+          await this.#pointsModel.deletePoint(updateType, update);
+          break;
 
-      case USER_ACTION.ADD_POINT:
-        this.#pointsModel.addPoint(update);
-        break;
+        case USER_ACTION.ADD_POINT:
+          await this.#pointsModel.addPoint(updateType, update);
+          break;
+      }
+    } catch (err) {
+      throw new Error(err);
     }
   };
 }

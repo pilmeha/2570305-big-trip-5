@@ -70,13 +70,13 @@ function createFormEditPointTemplate(state, destinations, offers) {
             class="event__input event__input--time"
             id="event-start-time-1"
             type="text"
-            value="${dayjs(state.date_from).format('DD/MM/YY HH:mm')}">
+            value="${dayjs(state.dateFrom).format('DD/MM/YY HH:mm')}">
           —
           <input
             class="event__input event__input--time"
             id="event-end-time-1"
             type="text"
-            value="${dayjs(state.date_to).format('DD/MM/YY HH:mm')}">
+            value="${dayjs(state.dateTo).format('DD/MM/YY HH:mm')}">
 
         </div>
 
@@ -89,7 +89,7 @@ function createFormEditPointTemplate(state, destinations, offers) {
           <input
             class="event__input event__input--price"
             type="number"
-            value="${state.base_price}">
+            value="${state.basePrice}">
 
         </div>
 
@@ -224,8 +224,8 @@ export default class FormEditPointView extends AbstractStatefulView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.date_from,
-        maxDate: this._state.date_to,
+        defaultDate: this._state.dateFrom,
+        maxDate: this._state.dateTo,
         onChange: this.#dateFromChangeHandler
       }
     );
@@ -235,8 +235,8 @@ export default class FormEditPointView extends AbstractStatefulView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        defaultDate: this._state.date_to,
-        minDate: this._state.date_from,
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
         onChange: this.#dateToChangeHandler
       }
     );
@@ -313,7 +313,7 @@ export default class FormEditPointView extends AbstractStatefulView {
 
   #dateFromChangeHandler = ([date]) => {
     this._setState({
-      date_from: date
+      dateFrom: date
     });
 
     if (this.#datepickerTo) {
@@ -323,7 +323,7 @@ export default class FormEditPointView extends AbstractStatefulView {
 
   #dateToChangeHandler = ([date]) => {
     this._setState({
-      date_to: date
+      dateTo: date
     });
 
     if (this.#datepickerFrom) {

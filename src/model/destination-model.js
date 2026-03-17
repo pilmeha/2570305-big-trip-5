@@ -1,10 +1,15 @@
-import { destinationsMocks } from '../mock/destinations-mock';
+import Observable from '../framework/observable.js';
 
-export default class DestinationModel {
-  #destinations = destinationsMocks;
+export default class DestinationModel extends Observable {
+  #destinations = [];
 
   get destinations() {
     return this.#destinations;
+  }
+
+  setDestinations(destinations) {
+    this.#destinations = [...destinations];
+    this._notify();
   }
 
   getById(id) {
