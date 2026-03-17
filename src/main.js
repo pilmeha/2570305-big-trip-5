@@ -19,15 +19,15 @@ const init = async () => {
   const offersModel = new OffersModel();
   const filterModel = new FilterModel();
 
-  // const [points, destinations, offers] = await Promise.all([
-  //   pointsApiService.points,
-  //   pointsApiService.destinations,
-  //   pointsApiService.offers
-  // ]);
+  const [points, destinations, offers] = await Promise.all([
+    pointsApiService.points,
+    pointsApiService.destinations,
+    pointsApiService.offers
+  ]);
 
-  // pointsModel.setPoints(points);
-  // destinationModel.setDestination(destinations);
-  // offersModel.setOffers(offers);
+  pointsModel.setPoints(points);
+  destinationModel.setDestinations(destinations);
+  offersModel.setOffers(offers);
 
   const boardPresenter = new BoardPresenter({
     boardContainer: tripElement,
@@ -43,7 +43,7 @@ const init = async () => {
     filterModel
   });
 
-  await pointsModel.init();
+  // await pointsModel.init();
 
   filterPresenter.init();
   boardPresenter.init();

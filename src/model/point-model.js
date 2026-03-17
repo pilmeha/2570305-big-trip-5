@@ -9,16 +9,16 @@ export default class PointModel extends Observable {
     this.#pointsApiService = pointsApiService;
   }
 
-  async init() {
-    try {
-      const points = await this.#pointsApiService.points;
-      this.#points = points;
-    } catch (err) {
-      this.#points = [];
-    }
+  // async init() {
+  //   try {
+  //     const points = await this.#pointsApiService.points;
+  //     this.#points = points;
+  //   } catch (err) {
+  //     this.#points = [];
+  //   }
 
-    this._notify();
-  }
+  //   this._notify();
+  // }
 
   get points() {
     return this.#points;
@@ -53,21 +53,30 @@ export default class PointModel extends Observable {
     }
   }
 
-  addPoint(updateType, newPoint) {
-    this.#points = [newPoint, ...this.#points];
+  async addPoint(updateType, newPoint) {
+    try {
+      const created = await this.#pointsApiService.addPoint(newPoint);
 
-    this._notify(updateType, newPoint);
+      this.#points = [created, ...this.#points];
+
+      this._notify(updateType, created);
+    } catch (err) {
+      throw new Error('Cannot add point');
+    }
   }
 
-  deletePoint(updateType, pointToDelete) {
-    if (!pointToDelete || !pointToDelete.id) {
-      return;
+  async deletePoint(updateType, pointToDelete) {
+    try {
+      await this.#pointsApiService.deletePoint(pointToDelete);
+
+      this.#points = this.#points.filter(
+        (point) => point.id !== pointToDelete.id
+      );
+
+      this._notify(updateType);
+    } catch {
+      throw new Error('Cannot delete point');
     }
 
-    this.#points = this.#points.filter(
-      (point) => point.id !== pointToDelete.id
-    );
-
-    this._notify(updateType);
   }
 }

@@ -228,19 +228,23 @@ export default class BoardPresenter {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (actionType, updateType, update) => {
-    switch (actionType) {
-      case USER_ACTION.UPDATE_POINT:
-        this.#pointsModel.updatePoint(updateType, update);
-        break;
+  #handlePointChange = async (actionType, updateType, update) => {
+    try {
+      switch (actionType) {
+        case USER_ACTION.UPDATE_POINT:
+          await this.#pointsModel.updatePoint(updateType, update);
+          break;
 
-      case USER_ACTION.DELETE_POINT:
-        this.#pointsModel.deletePoint(updateType, update);
-        break;
+        case USER_ACTION.DELETE_POINT:
+          await this.#pointsModel.deletePoint(updateType, update);
+          break;
 
-      case USER_ACTION.ADD_POINT:
-        this.#pointsModel.addPoint(updateType, update);
-        break;
+        case USER_ACTION.ADD_POINT:
+          await this.#pointsModel.addPoint(updateType, update);
+          break;
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 }

@@ -13,7 +13,7 @@ export default class PointsApiService extends ApiService {
   }
 
   get destinations() {
-    return this._load({url: 'destination'})
+    return this._load({url: 'destinations'})
       .then(ApiService.parseResponse);
   }
 
@@ -33,5 +33,12 @@ export default class PointsApiService extends ApiService {
     const parsedResponse = await ApiService.parseResponse(response);
 
     return PointAdapter.adaptToClient(parsedResponse);
+  }
+
+  async deletePoint(point) {
+    await this._load({
+      url: `points/${point.id}`,
+      method: Method.DELETE,
+    });
   }
 }

@@ -41,6 +41,7 @@ export const UPDATE_TYPE = {
 export const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  DELETE: 'DELETE',
 };
 
 export const AUTHORIZATION = 'Basic s41ntSpr1ngSt11113m0n';
