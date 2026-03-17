@@ -245,7 +245,7 @@ export default class BoardPresenter {
           break;
       }
     } catch (err) {
-      console.log(err);
+      throw new Error(err);
     }
   };
 }

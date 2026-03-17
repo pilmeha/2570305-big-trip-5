@@ -5,7 +5,7 @@ import PointModel from './model/point-model.js';
 import DestinationModel from './model/destination-model.js';
 import OffersModel from './model/offers-model.js';
 import FilterModel from './model/filter-model.js';
-import PointsApiService from './points-api-service.js';
+import PointsApiService from './services/points-api-service.js';
 import { AUTHORIZATION, END_POINT } from './const.js';
 import LoadingView from './view/loading-view.js';
 import {remove, render} from './framework/render.js';
@@ -36,7 +36,6 @@ const init = async () => {
     destinationModel.setDestinations(destinations);
     offersModel.setOffers(offers);
   } catch (err) {
-    console.log(err);
     render(new EmptyList(), tripElement);
     return;
   }
@@ -56,8 +55,6 @@ const init = async () => {
     pointsModel,
     filterModel
   });
-
-  // await pointsModel.init();
 
   filterPresenter.init();
   boardPresenter.init();
