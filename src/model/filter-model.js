@@ -1,4 +1,4 @@
-import { FILTER_TYPES } from '../const.js';
+import { FILTER_TYPES, UPDATE_TYPE } from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class FilterModel extends Observable {
@@ -14,6 +14,6 @@ export default class FilterModel extends Observable {
     }
 
     this.#filter = filterType;
-    this._notify();
+    this._notify(UPDATE_TYPE.MAJOR);
   }
 }
