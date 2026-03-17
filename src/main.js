@@ -7,6 +7,9 @@ import OffersModel from './model/offers-model.js';
 import FilterModel from './model/filter-model.js';
 import PointsApiService from './points-api-service.js';
 import { AUTHORIZATION, END_POINT } from './const.js';
+import LoadingView from './view/loading-view.js';
+import {remove, render} from './framework/render.js';
+import EmptyList from './view/empty-view.js';
 
 const tripElement = document.querySelector('.trip-events');
 const filtersElement = document.querySelector('.trip-controls__filters');
@@ -19,15 +22,26 @@ const init = async () => {
   const offersModel = new OffersModel();
   const filterModel = new FilterModel();
 
-  const [points, destinations, offers] = await Promise.all([
-    pointsApiService.points,
-    pointsApiService.destinations,
-    pointsApiService.offers
-  ]);
+  const loadingComponent = new LoadingView();
+  render(loadingComponent, tripElement);
 
-  pointsModel.setPoints(points);
-  destinationModel.setDestinations(destinations);
-  offersModel.setOffers(offers);
+  try {
+    const [points, destinations, offers] = await Promise.all([
+      pointsApiService.points,
+      pointsApiService.destinations,
+      pointsApiService.offers
+    ]);
+
+    pointsModel.setPoints(points);
+    destinationModel.setDestinations(destinations);
+    offersModel.setOffers(offers);
+  } catch (err) {
+    console.log(err);
+    render(new EmptyList(), tripElement);
+    return;
+  }
+
+  remove(loadingComponent);
 
   const boardPresenter = new BoardPresenter({
     boardContainer: tripElement,

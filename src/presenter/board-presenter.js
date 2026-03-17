@@ -206,7 +206,6 @@ export default class BoardPresenter {
     this.#handleModeChange();
 
     const newPoint = {
-      id: Date.now().toString(),
       type: 'taxi',
       destination: null,
       dateFrom: new Date(),

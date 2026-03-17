@@ -18,7 +18,7 @@ export const POINT_MODE = {
 
 export const SORT_TYPES = ['day', 'event', 'time', 'price', 'offers'];
 
-export const POINT_COUNT = 5;
+export const POINT_COUNT = 10;
 
 export const DESTINATION_TYPES = [
   'taxi',
@@ -42,6 +42,7 @@ export const Method = {
   GET: 'GET',
   PUT: 'PUT',
   DELETE: 'DELETE',
+  POST: 'POST',
 };
 
 export const AUTHORIZATION = 'Basic s41ntSpr1ngSt11113m0n';
