@@ -93,18 +93,12 @@ function createFormEditPointTemplate(state, destinations, offers) {
 
         </div>
 
-        <button
-          class="event__save-btn btn btn--blue"
-          type="submit"
-          ${state.isDisabled ? 'disabled' : ''}>
-            ${state.isSaving ? 'Saving...' : 'Save'}
+        <button class="event__save-btn btn btn--blue" type="submit">
+          Save
         </button>
 
-        <button
-        class="event__reset-btn"
-        type="reset"
-        ${state.isDisabled ? 'disabled' : ''}>
-          ${state.isDeleting ? 'Deleting...' : 'Delete'}
+        <button class="event__reset-btn" type="reset">
+          Delete
         </button>
 
         <button class="event__rollup-btn" type="button"></button>
@@ -145,7 +139,7 @@ export default class FormEditPointView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
 
-  constructor({point, destinations, offers}) {//, onFormSubmit, onRollupClick, onDeleteClick}) {
+  constructor({point, offers, destinations, onFormSubmit, onRollupClick, onDeleteClick}) {
     super();
 
     this._setState(FormEditPointView.parsePointToState(point));
@@ -153,9 +147,9 @@ export default class FormEditPointView extends AbstractStatefulView {
     this.#offers = offers;
     this.#destinations = destinations;
 
-    // this.#handleFormSubmit = onFormSubmit;
-    // this.#handleRollupClick = onRollupClick;
-    // this.#handleDeleteClick = onDeleteClick;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleRollupClick = onRollupClick;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -191,7 +185,9 @@ export default class FormEditPointView extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
-    this.element.addEventListener('submit', this.#formSubmitHandler);
+
+    this.element
+      .addEventListener('submit', this.#formSubmitHandler);
 
     this.element
       .querySelector('.event__rollup-btn')
@@ -218,6 +214,7 @@ export default class FormEditPointView extends AbstractStatefulView {
       .addEventListener('click', this.#deleteClickHandler);
 
     this.#setDatepicker();
+
   }
 
   #setDatepicker() {
@@ -249,20 +246,13 @@ export default class FormEditPointView extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
 
-    if (!this.#handleFormSubmit) {
-      return;
-    }
-
     this.#handleFormSubmit(
       FormEditPointView.parseStateToPoint(this._state)
     );
+
   };
 
   #rollupClickHandler = () => {
-    if (!this.#handleRollupClick) {
-      return;
-    }
-
     this.#handleRollupClick();
   };
 
@@ -316,11 +306,6 @@ export default class FormEditPointView extends AbstractStatefulView {
 
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
-
-    if (!this.#handleDeleteClick) {
-      return;
-    }
-
     this.#handleDeleteClick(
       FormEditPointView.parseStateToPoint(this._state)
     );
@@ -363,39 +348,5 @@ export default class FormEditPointView extends AbstractStatefulView {
     delete point.isDeleting;
 
     return point;
-  }
-
-  updateElement(patch) {
-    super.updateElement({
-      ...this._state,
-      ...patch
-    });
-  }
-
-  // updateElement({isDisabled, saveButtonText, deleteButtonText}) {
-  //   this._state.isDisabled = isDisabled;
-  //   this._state.saveButtonText = saveButtonText;
-  //   this._state.deleteButtonText = deleteButtonText;
-  //   this.updateElement();
-  // }
-
-  shake(callback) {
-    this.element.style.animation = 'shake 0.6s';
-    this.element.addEventListener('animationend', () => {
-      this.element.style.animation = '';
-      callback?.();
-    }, {once: true});
-  }
-
-  setFormSubmitHandler(callback) {
-    this.#handleFormSubmit = callback;
-  }
-
-  setDeleteClickHandler(callback) {
-    this.#handleDeleteClick = callback;
-  }
-
-  setCancelClickHandler(callback) {
-    this.#handleRollupClick = callback;
   }
 }

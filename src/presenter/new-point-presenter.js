@@ -27,63 +27,49 @@ export default class NewPointPresenter {
 
     this.#formComponent = new FormEditPointView({
       point,
-      destinations: this.#destinations,
       offers: this.#offers,
+      destinations: this.#destinations,
+      onFormSubmit: this.#handleSubmit,
+      onDeleteClick: this.#handleCancel,
+      onRollupClick: this.#handleCancel
     });
 
-    render(this.#formComponent, this.#container);
+    render(this.#formComponent, this.#container, 'afterbegin');
 
-    this.#formComponent.setFormSubmitHandler(this.#handleSubmit);
-    this.#formComponent.setDeleteClickHandler(this.#handleDeleteClick);
-    this.#formComponent.setCancelClickHandler(() => this.destroy());
-
+    document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  destroy = () => {
+  destroy() {
     if (this.#formComponent === null) {
       return;
     }
 
     remove(this.#formComponent);
     this.#formComponent = null;
-    this.#onDestroy?.();
+
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+
+    this.#onDestroy();
+  }
+
+  #handleSubmit = (point) => {
+    this.#onDataChange(
+      USER_ACTION.ADD_POINT,
+      UPDATE_TYPE.MINOR,
+      point
+    );
+
+    this.destroy();
   };
 
-  #handleSubmit = async (point) => {
-    this.#formComponent.updateElement({
-      isDisabled: true,
-      isSaving: true
-    });
-
-    try {
-      await this.#onDataChange(USER_ACTION.ADD_POINT, UPDATE_TYPE.MINOR, point);
-      this.destroy();
-    } catch {
-      this.#formComponent.shake(() => {
-        this.#formComponent.updateElement({
-          isDisabled: false,
-          isSaving: false
-        });
-      });
-    }
+  #handleCancel = () => {
+    this.destroy();
   };
 
-  #handleDeleteClick = async (point) => {
-    this.#formComponent.updateElement({
-      isDisabled: true,
-      isDeleting: true
-    });
-
-    try {
-      await this.#onDataChange(USER_ACTION.DELETE_POINT, UPDATE_TYPE.MINOR, point);
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
       this.destroy();
-    } catch {
-      this.#formComponent.shake(() => {
-        this.#formComponent.updateElement({
-          isDisabled: false,
-          isDeleting: false
-        });
-      });
     }
   };
 }
