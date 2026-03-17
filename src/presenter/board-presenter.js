@@ -205,12 +205,14 @@ export default class BoardPresenter {
   #handleNewPointClick = () => {
     this.#handleModeChange();
 
+    const firsteDestination = this.#destinationModel.destinations[0];
+
     const newPoint = {
       type: 'taxi',
-      destination: null,
+      destination: firsteDestination.id,
       dateFrom: new Date(),
-      dateTo: new Date(),
-      basePrice: 0,
+      dateTo: new Date(Date.now() + 60 * 60 * 1000),
+      basePrice: 100,
       offers: [],
       isFavorite: false
     };

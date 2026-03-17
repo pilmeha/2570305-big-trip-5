@@ -47,7 +47,7 @@ export default class NewPointPresenter {
     remove(this.#formComponent);
     this.#formComponent = null;
 
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
 
     this.#onDestroy();
   }
