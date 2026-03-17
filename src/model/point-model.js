@@ -1,16 +1,21 @@
 import Observable from '../framework/observable.js';
 
 export default class PointModel extends Observable {
+  #pointsApiService = null;
   #points = [];
+
+  constructor({pointsApiService}) {
+    super();
+    this.#pointsApiService = pointsApiService;
+
+    this.#pointsApiService.points.then((points) => {
+      console.log(points);
+    });
+  }
 
   get points() {
     return this.#points;
   }
-
-  // setPoints(points) {
-  //   this.#points = [...points];
-  //   this._notify();
-  // }
 
   updatePoint(updateType, updatedPoint) {
     if (!updatedPoint || !updatedPoint.id) {

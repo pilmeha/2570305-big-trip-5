@@ -37,3 +37,11 @@ export const UPDATE_TYPE = {
   MINOR: 'minor',
   MAJOR: 'major'
 };
+
+export const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+};
+
+export const AUTHORIZATION = 'Basic s41ntSpr1ngSt11113m0n';
+export const END_POINT = 'https://24.objects.htmlacademy.pro/spec/big-trip';
