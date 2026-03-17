@@ -1,6 +1,4 @@
-/* eslint-disable camelcase */
 import SortView from '../view/sort-view.js';
-
 import {render, remove} from '../framework/render.js';
 
 import EmptyList from '../view/empty-view.js';
@@ -17,6 +15,7 @@ import {
 } from '../utils/filter.js';
 
 import NewPointPresenter from './new-point-presenter.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class BoardPresenter {
 
@@ -28,18 +27,20 @@ export default class BoardPresenter {
   #filterModel = null;
 
   #eventListComponent = new ContentView();
-
   #pointPresenters = new Map();
 
   #renderedPointCount = POINT_COUNT;
-
   #showMoreButtonComponent = null;
 
   #newPointButton = document.querySelector('.trip-main__event-add-btn');
-
   #emptyListComponent = null;
 
   #newPointPresenter = null;
+
+  #uiBlocker = new UiBlocker({
+    lowerLimit: 350,
+    upperLimit: 1000
+  });
 
   constructor({
     boardContainer,
@@ -58,10 +59,7 @@ export default class BoardPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
     this.#pointsModel.addObserver(this.#handleModelEvent);
 
-    this.#newPointButton.addEventListener(
-      'click',
-      this.#handleNewPointClick
-    );
+    this.#newPointButton.addEventListener('click', this.#handleNewPointClick);
 
     this.#newPointPresenter = new NewPointPresenter({
       container: this.#eventListComponent.element,
@@ -79,10 +77,8 @@ export default class BoardPresenter {
     switch (filter) {
       case FILTER_TYPES.FUTURE:
         return points.filter(filterPointFuture);
-
       case FILTER_TYPES.PRESENT:
         return points.filter(filterPointPresent);
-
       case FILTER_TYPES.PAST:
         return points.filter(filterPointPast);
     }
@@ -93,7 +89,6 @@ export default class BoardPresenter {
   init() {
     render(new SortView(), this.#boardContainer);
     render(this.#eventListComponent, this.#boardContainer);
-
     this.#renderBoard();
   }
 
@@ -116,30 +111,23 @@ export default class BoardPresenter {
   };
 
   #renderBoard() {
-
     const points = this.points;
 
     if (!points.length) {
-
       this.#emptyListComponent = new EmptyList();
-
       render(this.#emptyListComponent, this.#boardContainer);
-
       return;
     }
 
     const pointsToRender = points.slice(0, this.#renderedPointCount);
-
     pointsToRender.forEach((point) => this.#renderPoint(point));
 
     if (points.length > this.#renderedPointCount) {
       this.#renderShowMoreButton();
     }
-
   }
 
   #clearBoard({resetRenderedPointCount = false} = {}) {
-
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
 
@@ -159,16 +147,11 @@ export default class BoardPresenter {
 
   #renderShowMoreButton() {
     this.#showMoreButtonComponent = new ShowMoreButtonView();
-
-    this.#showMoreButtonComponent.setClickHandler(
-      this.#handleShowMoreClick
-    );
-
+    this.#showMoreButtonComponent.setClickHandler(this.#handleShowMoreClick);
     render(this.#showMoreButtonComponent, this.#boardContainer);
   }
 
   #renderPoint(point) {
-
     const pointPresenter = new PointPresenter({
       container: this.#eventListComponent.element,
       destinations: this.#destinationModel.destinations,
@@ -178,7 +161,6 @@ export default class BoardPresenter {
     });
 
     pointPresenter.init(point);
-
     this.#pointPresenters.set(point.id, pointPresenter);
   }
 
@@ -205,11 +187,11 @@ export default class BoardPresenter {
   #handleNewPointClick = () => {
     this.#handleModeChange();
 
-    const firsteDestination = this.#destinationModel.destinations[0];
+    const firstDestination = this.#destinationModel.destinations[0];
 
     const newPoint = {
       type: 'taxi',
-      destination: firsteDestination.id,
+      destination: firstDestination.id,
       dateFrom: new Date(),
       dateTo: new Date(Date.now() + 60 * 60 * 1000),
       basePrice: 100,
@@ -230,6 +212,8 @@ export default class BoardPresenter {
   };
 
   #handlePointChange = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+
     try {
       switch (actionType) {
         case USER_ACTION.UPDATE_POINT:
@@ -247,5 +231,7 @@ export default class BoardPresenter {
     } catch (err) {
       throw new Error(err);
     }
+
+    this.#uiBlocker.unblock();
   };
 }

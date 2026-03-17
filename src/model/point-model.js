@@ -1,3 +1,4 @@
+import { UPDATE_TYPE } from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class PointModel extends Observable {
@@ -9,30 +10,18 @@ export default class PointModel extends Observable {
     this.#pointsApiService = pointsApiService;
   }
 
-  // async init() {
-  //   try {
-  //     const points = await this.#pointsApiService.points;
-  //     this.#points = points;
-  //   } catch (err) {
-  //     this.#points = [];
-  //   }
-
-  //   this._notify();
-  // }
-
   get points() {
     return this.#points;
   }
 
   setPoints(points) {
     this.#points = [...points];
-    this._notify();
+    this._notify(UPDATE_TYPE.MAJOR);
   }
 
   async updatePoint(updateType, updatedPoint) {
     try {
       const updated = await this.#pointsApiService.updatePoint(updatedPoint);
-
       const index = this.#points.findIndex(
         (point) => point.id === updated.id
       );
@@ -56,9 +45,7 @@ export default class PointModel extends Observable {
   async addPoint(updateType, newPoint) {
     try {
       const created = await this.#pointsApiService.addPoint(newPoint);
-
       this.#points = [created, ...this.#points];
-
       this._notify(updateType, created);
     } catch (err) {
       throw new Error('Cannot add point');
@@ -68,12 +55,10 @@ export default class PointModel extends Observable {
   async deletePoint(updateType, pointToDelete) {
     try {
       await this.#pointsApiService.deletePoint(pointToDelete);
-
       this.#points = this.#points.filter(
         (point) => point.id !== pointToDelete.id
       );
-
-      this._notify(updateType);
+      this._notify(updateType, pointToDelete);
     } catch {
       throw new Error('Cannot delete point');
     }
