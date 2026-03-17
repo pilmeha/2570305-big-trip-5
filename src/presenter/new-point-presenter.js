@@ -30,8 +30,8 @@ export default class NewPointPresenter {
       offers: this.#offers,
       destinations: this.#destinations,
       onFormSubmit: this.#handleSubmit,
-      onDeleteClick: this.#handleCancel,
-      onRollupClick: this.#handleCancel
+      onRollupClick: this.#handleCancel,
+      onDeleteClick: this.#handleDelete
     });
 
     render(this.#formComponent, this.#container, 'afterbegin');
@@ -52,14 +52,36 @@ export default class NewPointPresenter {
     this.#onDestroy();
   }
 
-  #handleSubmit = (point) => {
-    this.#onDataChange(
-      USER_ACTION.ADD_POINT,
-      UPDATE_TYPE.MINOR,
-      point
-    );
+  #handleSubmit = async (point) => {
+    this.#formComponent.setSaving();
 
-    this.destroy();
+    try {
+      await this.#onDataChange(
+        USER_ACTION.ADD_POINT,
+        UPDATE_TYPE.MINOR,
+        point
+      );
+
+      this.destroy();
+    } catch {
+      this.#formComponent.setAborting();
+    }
+  };
+
+  #handleDelete = async (point) => {
+    this.#formComponent.setDeleting();
+
+    try {
+      await this.#onDataChange(
+        USER_ACTION.DELETE_POINT,
+        UPDATE_TYPE.MINOR,
+        point
+      );
+
+      this.destroy();
+    } catch {
+      this.#formComponent.setAborting();
+    }
   };
 
   #handleCancel = () => {

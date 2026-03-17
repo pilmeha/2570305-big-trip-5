@@ -8,7 +8,7 @@ import PointPresenter from './point-presenter.js';
 import ContentView from '../view/content-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 
-import {FILTER_TYPES, POINT_COUNT, UPDATE_TYPE, USER_ACTION} from '../const.js';
+import {FILTER_TYPES, POINT_COUNT, TIME_LIMIT, UPDATE_TYPE, USER_ACTION} from '../const.js';
 
 import {
   filterPointFuture,
@@ -17,6 +17,7 @@ import {
 } from '../utils/filter.js';
 
 import NewPointPresenter from './new-point-presenter.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class BoardPresenter {
 
@@ -40,6 +41,8 @@ export default class BoardPresenter {
   #emptyListComponent = null;
 
   #newPointPresenter = null;
+
+  #uiBlocker = new UiBlocker(TIME_LIMIT);
 
   constructor({
     boardContainer,
@@ -246,6 +249,8 @@ export default class BoardPresenter {
       }
     } catch (err) {
       throw new Error(err);
+    } finally {
+      this.#uiBlocker.unblock();
     }
   };
 }
