@@ -11,26 +11,42 @@ import { AUTHORIZATION, END_POINT } from './const.js';
 const tripElement = document.querySelector('.trip-events');
 const filtersElement = document.querySelector('.trip-controls__filters');
 
-const pointsModel = new PointModel({
-  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
-});
-const destinationModel = new DestinationModel();
-const offersModel = new OffersModel();
-const filterModel = new FilterModel();
+const init = async () => {
+  const pointsApiService = new PointsApiService(END_POINT, AUTHORIZATION);
 
-const boardPresenter = new BoardPresenter({
-  boardContainer: tripElement,
-  pointsModel: pointsModel,
-  destinationModel: destinationModel,
-  offersModel: offersModel,
-  filterModel: filterModel
-});
+  const pointsModel = new PointModel({pointsApiService});
+  const destinationModel = new DestinationModel();
+  const offersModel = new OffersModel();
+  const filterModel = new FilterModel();
 
-const filterPresenter = new FilterPresenter({
-  container: filtersElement,
-  pointsModel,
-  filterModel
-});
+  // const [points, destinations, offers] = await Promise.all([
+  //   pointsApiService.points,
+  //   pointsApiService.destinations,
+  //   pointsApiService.offers
+  // ]);
 
-filterPresenter.init();
-boardPresenter.init();
+  // pointsModel.setPoints(points);
+  // destinationModel.setDestination(destinations);
+  // offersModel.setOffers(offers);
+
+  const boardPresenter = new BoardPresenter({
+    boardContainer: tripElement,
+    pointsModel: pointsModel,
+    destinationModel: destinationModel,
+    offersModel: offersModel,
+    filterModel: filterModel
+  });
+
+  const filterPresenter = new FilterPresenter({
+    container: filtersElement,
+    pointsModel,
+    filterModel
+  });
+
+  await pointsModel.init();
+
+  filterPresenter.init();
+  boardPresenter.init();
+};
+
+init();

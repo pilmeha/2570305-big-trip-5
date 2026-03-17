@@ -23,7 +23,9 @@ const createPointViewTemplate = (point, destination, offers) => {
   return `
     <li class="trip-events__item">
       <div class="event">
-        <time class="event__date">${formatEventDate(point.date_from)}</time>
+        <time class="event__date">
+          ${formatEventDate(point.dateFrom)}
+        </time>
         <div class="event__type">
           <img
             class="event__type-icon"
@@ -39,29 +41,30 @@ const createPointViewTemplate = (point, destination, offers) => {
 
           <p class="event__time">
             <time class="event__start-time">
-              ${formatEventTime(point.date_from, point.date_to).split(' — ')[0]}
+              ${formatEventTime(point.dateFrom, point.dateTo).split(' — ')[0]}
             </time>
             &mdash;
             <time class="event__end-time">
-              ${formatEventTime(point.date_from, point.date_to).split(' — ')[1]}
+              ${formatEventTime(point.dateFrom, point.dateTo).split(' — ')[1]}
             </time>
           </p>
 
           <p class="event__duration">
-            ${formatDuration(point.date_from, point.date_to)}
+            ${formatDuration(point.dateFrom, point.dateTo)}
           </p>
 
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">
-            ${point.base_price}
+            ${point.basePrice}
           </span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
           ${createOffersTemplate(selectedOffers)}
         </ul>
-        <button class="event__favorite-btn ${point.is_favorite ? 'event__favorite-btn--active' : ''}"
+        <button
+          class="event__favorite-btn ${point.isFavorite ? 'event__favorite-btn--active' : ''}"
           type="button"
         >
           <span class="visually-hidden">Add to favorite</span>

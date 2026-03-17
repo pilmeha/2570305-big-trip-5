@@ -71,7 +71,7 @@ const createFormAddPointTemplate = (point, destination, offers, destinations) =>
         id="event-price-1"
         type="text"
         name="event-price"
-        value="${point.base_price}">
+        value="${point.basePrice}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -134,8 +134,15 @@ export default class FormAddPointView extends AbstractView {
   #submitHandlerInternal = (evt) => {
     evt.preventDefault();
 
+    const formData = new FormData(evt.target);
+
+    const updatedPoint = {
+      ...this.#point,
+      basePrice: Number(formData.get('event-price')),
+    };
+
     if (this.#submitHandler) {
-      this.#submitHandler(this.#point);
+      this.#submitHandler(updatedPoint);
     }
   };
 

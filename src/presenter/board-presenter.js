@@ -209,11 +209,11 @@ export default class BoardPresenter {
       id: Date.now().toString(),
       type: 'taxi',
       destination: null,
-      date_from: new Date(),
-      date_to: new Date(),
-      base_price: 0,
+      dateFrom: new Date(),
+      dateTo: new Date(),
+      basePrice: 0,
       offers: [],
-      is_favorite: false
+      isFavorite: false
     };
 
     this.#newPointButton.disabled = true;

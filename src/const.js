@@ -44,4 +44,4 @@ export const Method = {
 };
 
 export const AUTHORIZATION = 'Basic s41ntSpr1ngSt11113m0n';
-export const END_POINT = 'https://24.objects.htmlacademy.pro/spec/big-trip';
+export const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
